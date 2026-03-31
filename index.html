@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Verdad o Reto 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --pink:    #f472b6;
+    --rose:    #fb7185;
+    --violet:  #a78bfa;
+    --green:   #86efac;
+    --cream:   #fff7ed;
+    --dark:    #1a0a2e;
+    --card-bg: rgba(255,255,255,0.07);
+    --border:  rgba(255,255,255,0.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow-x:hidden}
+
+  body {
+    font-family:'DM Sans',sans-serif;
+    background: #0f0520;
+    color:#fff;
+    min-height:100vh;
+    position:relative;
+  }
+
+  /* ── Fondo animado ── */
+  body::before {
+    content:'';
+    position:fixed;inset:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(167,139,250,.25) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(244,114,182,.2) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(251,113,133,.1) 0%, transparent 70%);
+    pointer-events:none;z-index:0;
+    animation:bgPulse 8s ease-in-out infinite alternate;
+  }
+  @keyframes bgPulse{
+    from{opacity:.8} to{opacity:1}
+  }
+
+  /* partículas */
+  .particle {
+    position:fixed;border-radius:50%;pointer-events:none;z-index:0;
+    animation:floatUp linear infinite;
+    opacity:0;
+  }
+  @keyframes floatUp {
+    0%  {transform:translateY(100vh) scale(0);opacity:0}
+    10% {opacity:.5}
+    90% {opacity:.3}
+    100%{transform:translateY(-10vh) scale(1);opacity:0}
+  }
+
+  /* ── Layout ── */
+  .app{
+    position:relative;z-index:1;
+    max-width:520px;margin:0 auto;
+    padding:2rem 1.25rem 3rem;
+    min-height:100vh;display:flex;flex-direction:column;
+  }
+
+  header{text-align:center;margin-bottom:2rem}
+  header h1{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(28px,7vw,42px);
+    font-weight:900;
+    background:linear-gradient(135deg,#f9a8d4,#c084fc,#fb7185);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+    line-height:1.1;
+    margin-bottom:6px;
+  }
+  header p{font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.05em}
+
+  /* ── Score ── */
+  .scores{display:flex;gap:10px;margin-bottom:2rem}
+  .sc{
+    flex:1;background:var(--card-bg);
+    border:0.5px solid var(--border);
+    border-radius:14px;padding:10px;text-align:center;
+    backdrop-filter:blur(12px);
+  }
+  .sc-l{font-size:10px;color:rgba(255,255,255,.45);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+  .sc-n{font-size:22px;font-weight:600;color:#fff}
+
+  /* ── Screens ── */
+  .screen{display:none;flex-direction:column;align-items:center;flex:1}
+  .screen.active{display:flex;animation:fadeIn .35s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ── Ruleta ── */
+  .wheel-wrap{position:relative;display:inline-block;margin-bottom:1.5rem}
+  .wheel-wrap canvas{display:block;filter:drop-shadow(0 0 30px rgba(167,139,250,.4))}
+
+  .pointer-tip{
+    position:absolute;top:-10px;left:50%;transform:translateX(-50%);
+    width:0;height:0;
+    border-left:13px solid transparent;
+    border-right:13px solid transparent;
+    border-top:28px solid #f472b6;
+    filter:drop-shadow(0 2px 8px rgba(244,114,182,.8));
+    z-index:10;
+  }
+
+  /* ── Botones ── */
+  .btn{
+    display:inline-block;padding:14px 40px;
+    border-radius:50px;border:none;
+    font-family:'DM Sans',sans-serif;
+    font-size:15px;font-weight:600;
+    cursor:pointer;
+    transition:transform .15s,box-shadow .15s,opacity .15s;
+    position:relative;overflow:hidden;
+    letter-spacing:.02em;
+  }
+  .btn:active{transform:scale(.96)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn::after{
+    content:'';position:absolute;inset:0;
+    background:rgba(255,255,255,0);
+    transition:background .2s;
+  }
+  .btn:hover:not(:disabled)::after{background:rgba(255,255,255,.12)}
+
+  .btn-main{
+    background:linear-gradient(135deg,#a78bfa,#f472b6);
+    color:#fff;
+    box-shadow:0 4px 24px rgba(167,139,250,.5);
+  }
+  .btn-main:hover:not(:disabled){box-shadow:0 6px 32px rgba(167,139,250,.7)}
+
+  .btn-verdad{
+    background:linear-gradient(135deg,#4ade80,#86efac);
+    color:#14532d;
+    box-shadow:0 4px 20px rgba(74,222,128,.35);
+  }
+  .btn-reto{
+    background:linear-gradient(135deg,#fb7185,#f43f5e);
+    color:#fff;
+    box-shadow:0 4px 20px rgba(251,113,133,.4);
+  }
+  .btn-back{
+    background:var(--card-bg);
+    border:0.5px solid var(--border);
+    color:rgba(255,255,255,.6);
+    font-size:13px;padding:9px 22px;
+    margin-top:10px;backdrop-filter:blur(12px);
+  }
+  .btn-back:hover{color:#fff}
+
+  /* ── Carta resultado ── */
+  .result-card{
+    margin-top:1.25rem;width:100%;
+    background:var(--card-bg);
+    border:0.5px solid var(--border);
+    border-radius:20px;
+    padding:1.5rem 1.25rem;
+    text-align:center;
+    backdrop-filter:blur(16px);
+    animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+  .result-emoji{font-size:36px;margin-bottom:10px}
+  .result-badge{
+    display:inline-block;
+    font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 14px;border-radius:20px;margin-bottom:12px;
+  }
+  .badge-romantico{background:rgba(244,114,182,.2);color:#f9a8d4}
+  .badge-picaro{background:rgba(251,113,133,.2);color:#fda4af}
+  .badge-verdad{background:rgba(74,222,128,.15);color:#86efac}
+  .badge-reto{background:rgba(251,113,133,.2);color:#fda4af}
+  .result-text{font-size:15px;line-height:1.65;color:rgba(255,255,255,.9)}
+
+  /* ── Separador ── */
+  .divider{
+    display:flex;align-items:center;gap:10px;
+    width:100%;margin:1rem 0;color:rgba(255,255,255,.2);font-size:12px;
+  }
+  .divider::before,.divider::after{content:'';flex:1;height:0.5px;background:var(--border)}
+
+  /* ── Título de pantalla ── */
+  .screen-title{
+    font-family:'Playfair Display',serif;
+    font-size:20px;font-weight:700;margin-bottom:1.25rem;
+    text-align:center;
+  }
+  .screen-title.v{
+    background:linear-gradient(135deg,#4ade80,#86efac);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+  .screen-title.r{
+    background:linear-gradient(135deg,#fb7185,#f9a8d4);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  }
+
+  /* instrucción */
+  .hint{font-size:12px;color:rgba(255,255,255,.35);margin-bottom:1.25rem;text-align:center}
+
+  /* ── Responsive ── */
+  @media(max-width:400px){
+    .app{padding:1.25rem .75rem 2.5rem}
+    header h1{font-size:28px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Partículas -->
+<div id="particles"></div>
+
+<div class="app">
+  <header>
+    <h1>Verdad o Reto</h1>
+    <p>💌 Gira la ruleta y descubre tu destino</p>
+  </header>
+
+  <div class="scores">
+    <div class="sc"><div class="sc-l">Verdades</div><div class="sc-n" id="sv">0</div></div>
+    <div class="sc"><div class="sc-l">Retos</div><div class="sc-n" id="sr">0</div></div>
+    <div class="sc"><div class="sc-l">Total</div><div class="sc-n" id="st">0</div></div>
+  </div>
+
+  <!-- ══ PANTALLA 1: Ruleta principal ══ -->
+  <div id="s1" class="screen active">
+    <p class="hint">Gira para saber si es Verdad o Reto</p>
+    <div class="wheel-wrap">
+      <div class="pointer-tip"></div>
+      <canvas id="c1" width="300" height="300"></canvas>
+    </div>
+    <button class="btn btn-main" id="btn1" onclick="spinMain()">¡Girar! 🎲</button>
+  </div>
+
+  <!-- ══ PANTALLA 2: Ruleta de Verdades ══ -->
+  <div id="s2" class="screen">
+    <div class="screen-title v">💬 ¡Verdad!</div>
+    <p class="hint">Gira para ver tu pregunta</p>
+    <div class="wheel-wrap">
+      <div class="pointer-tip"></div>
+      <canvas id="c2" width="300" height="300"></canvas>
+    </div>
+    <button class="btn btn-verdad" id="btn2" onclick="spinVerdad()">Girar verdad 💬</button>
+    <button class="btn btn-back" onclick="goBack()">← Volver al inicio</button>
+    <div id="r2" class="result-card" style="display:none"></div>
+  </div>
+
+  <!-- ══ PANTALLA 3: Ruleta de Retos ══ -->
+  <div id="s3" class="screen">
+    <div class="screen-title r">🎯 ¡Reto!</div>
+    <p class="hint">Gira para ver tu reto</p>
+    <div class="wheel-wrap">
+      <div class="pointer-tip"></div>
+      <canvas id="c3" width="300" height="300"></canvas>
+    </div>
+    <button class="btn btn-reto" id="btn3" onclick="spinReto()">Girar reto 🎯</button>
+    <button class="btn btn-back" onclick="goBack()">← Volver al inicio</button>
+    <div id="r3" class="result-card" style="display:none"></div>
+  </div>
+</div>
+
+<script>
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ✏️  EDITA AQUÍ — VERDADES (16 cartas)                      ║
+// ║  cat: "Romántica" | "Pícara"                                ║
+// ╚══════════════════════════════════════════════════════════════╝
+const verdades = [
+  // ── 8 ROMÁNTICAS ──
+  {emoji:"🌹", cat:"Romántica", texto:"¿Qué es lo que más te gusta de nuestra relación?"},
+  {emoji:"🥺", cat:"Romántica", texto:"¿Cuál es el momento conmigo que más llevas en el corazón?"},
+  {emoji:"💌", cat:"Romántica", texto:"¿Qué te gustaría que te dijera todos los días para sentirte más amado/a?"},
+  {emoji:"✈️", cat:"Romántica", texto:"¿Cómo te imaginas nuestro primer encuentro en persona? ¿Qué te gustaría que hiciéramos?"},
+  {emoji:"☁️", cat:"Romántica", texto:"¿Qué detalle pequeño mío te hace sonreír cuando lo recuerdas?"},
+  {emoji:"🤍", cat:"Romántica", texto:"¿Qué es lo que más extrañas de no estar juntos físicamente?"},
+  {emoji:"🌠", cat:"Romántica", texto:"¿Qué sueño o plan juntos te ilusiona más para cuando podamos vernos?"},
+  {emoji:"🫶", cat:"Romántica", texto:"¿Qué palabras o acciones mías te hacen sentir más amado/a y especial?"},
+  // ── 8 PÍCARAS ──
+  {emoji:"🌶️", cat:"Pícara", texto:"¿Qué parte de tu cuerpo es tu favorita y por qué?"},
+  {emoji:"🔥", cat:"Pícara", texto:"¿Qué es lo que más te excita cuando piensas en mí?"},
+  {emoji:"😈", cat:"Pícara", texto:"¿Qué te gustaría que te hiciera la próxima vez que estemos juntos?"},
+  {emoji:"💭", cat:"Pícara", texto:"Describe tu fantasía más pícara conmigo sin censurarla."},
+  {emoji:"😏", cat:"Pícara", texto:"¿Prefieres que sea más suave o más intenso/a contigo?"},
+  {emoji:"📸", cat:"Pícara", texto:"¿Qué foto mía te pondría más nervioso/a recibir?"},
+  {emoji:"😳", cat:"Pícara", texto:"¿Qué idea pícara tienes en mente que nunca me has dicho?"},
+  {emoji:"💫", cat:"Pícara", texto:"¿Qué tan excitado/a te pone la idea de mandarnos mensajes pícaros? ¿Qué te da más miedo y qué más ganas?"},
+];
+
+// ╔══════════════════════════════════════════════════════════════╗
+// ║  ✏️  EDITA AQUÍ — RETOS (16 cartas)                         ║
+// ║  cat: "Romántico" | "Pícaro"                                ║
+// ╚══════════════════════════════════════════════════════════════╝
+const retos = [
+  // ── 8 ROMÁNTICOS ──
+  {emoji:"😘", cat:"Romántico", texto:"Manda una foto mandando un beso a la cámara con mirada dulce."},
+  {emoji:"🫶", cat:"Romántico", texto:"Foto haciendo un corazón con las manos hacia la cámara."},
+  {emoji:"😄", cat:"Romántico", texto:"Foto de tu sonrisa más bonita y natural."},
+  {emoji:"🛏️", cat:"Romántico", texto:"Foto abrazando tu almohada como si fuera yo."},
+  {emoji:"📝", cat:"Romántico", texto:"Escribe 'Te extraño' en un papel y tómate una foto sosteniéndolo."},
+  {emoji:"🪞", cat:"Romántico", texto:"Foto mirándote al espejo con mirada tierna y amorosa."},
+  {emoji:"🌅", cat:"Romántico", texto:"Foto con luz suave mostrando tu cara relajada y feliz."},
+  {emoji:"🎁", cat:"Romántico", texto:"Foto sosteniendo algo que te recuerde a mí."},
+  // ── 8 PÍCAROS ──
+  {emoji:"😉", cat:"Pícaro", texto:"Manda un audio de voz diciéndome algo que nunca te has animado a decirme."},
+  {emoji:"🎭", cat:"Pícaro", texto:"Escríbeme un mensaje pícaro como si no tuvieras ninguna vergüenza."},
+  {emoji:"🫦", cat:"Pícaro", texto:"Manda foto con tu expresión más coqueta y seductora."},
+  {emoji:"💃", cat:"Pícaro", texto:"Grábate bailando 10 segundos de forma provocadora y mándalo."},
+  {emoji:"😜", cat:"Pícaro", texto:"Dime con detalle qué harías si estuviéramos solos en este momento."},
+  {emoji:"📖", cat:"Pícaro", texto:"Escríbeme un relato de 3 líneas con nosotros dos en plan pícaro."},
+  {emoji:"🤫", cat:"Pícaro", texto:"Confiésame algo que siempre quisiste hacer conmigo pero nunca dijiste."},
+  {emoji:"🌙", cat:"Pícaro", texto:"Describe cómo sería nuestra noche perfecta juntos, con todos los detalles."},
+];
+// ╔══════════════════════════════════════════════════════════════╗
+// ║               FIN DE LA SECCIÓN EDITABLE                    ║
+// ╚══════════════════════════════════════════════════════════════╝
+
+// ── Segmentos ruleta principal ──
+const MAIN = [
+  {label:"VERDAD", color:"#4ade80", text:"#14532d"},
+  {label:"RETO",   color:"#fb7185", text:"#fff"},
+  {label:"VERDAD", color:"#86efac", text:"#14532d"},
+  {label:"RETO",   color:"#f472b6", text:"#fff"},
+  {label:"VERDAD", color:"#4ade80", text:"#14532d"},
+  {label:"RETO",   color:"#fb7185", text:"#fff"},
+  {label:"VERDAD", color:"#86efac", text:"#14532d"},
+  {label:"RETO",   color:"#f472b6", text:"#fff"},
+];
+
+function buildSegsVerdad(){
+  return verdades.map(v=>({
+    label: v.cat, emoji: v.emoji, data: v,
+    color: v.cat==="Romántica" ? "#f9a8d4" : "#fda4af",
+    text:  "#4a0820"
+  }));
+}
+function buildSegsReto(){
+  return retos.map(r=>({
+    label: r.cat, emoji: r.emoji, data: r,
+    color: r.cat==="Romántico" ? "#c084fc" : "#a78bfa",
+    text:  "#1e0a3c"
+  }));
+}
+
+// ── Dibujado ──
+function drawWheel(ctx, segs, rotation){
+  const cx=150, cy=150, r=136;
+  const arc = (2*Math.PI)/segs.length;
+  ctx.clearRect(0,0,300,300);
+
+  segs.forEach((s,i)=>{
+    const start = rotation + i*arc - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,start+arc);
+    ctx.closePath();
+    ctx.fillStyle = s.color;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.6)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.rotate(start + arc/2);
+    ctx.textAlign = "center";
+    if(s.emoji){
+      ctx.font = "15px sans-serif";
+      ctx.fillText(s.emoji, r*0.62, -8);
+    }
+    ctx.font = "bold 11px 'DM Sans',sans-serif";
+    ctx.fillStyle = s.text;
+    const shortLabel = s.label.length > 9 ? s.label.slice(0,8)+"…" : s.label;
+    ctx.fillText(shortLabel, r*0.62, 8);
+    ctx.restore();
+  });
+
+  // Centro
+  const grad = ctx.createRadialGradient(cx,cy,0,cx,cy,24);
+  grad.addColorStop(0,"#fff");
+  grad.addColorStop(1,"#e5e7eb");
+  ctx.beginPath();
+  ctx.arc(cx,cy,24,0,2*Math.PI);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  ctx.strokeStyle = "rgba(0,0,0,0.1)";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.font = "bold 13px 'DM Sans',sans-serif";
+  ctx.fillStyle = "#374151";
+  ctx.textAlign = "center";
+  ctx.fillText("💌", cx, cy+5);
+}
+
+let spinning = false;
+let sv=0, sr=0;
+let vSegs, rSegs;
+let rot1=0, rot2=0, rot3=0;
+
+function getWinner(segs, totalRot){
+  const arc = (2*Math.PI)/segs.length;
+  const norm = ((-totalRot % (2*Math.PI)) + 2*Math.PI) % (2*Math.PI);
+  return segs[Math.floor(norm/arc) % segs.length];
+}
+
+function animateSpin(cvId, segs, totalRot, duration, onDone){
+  const cv = document.getElementById(cvId);
+  const ctx = cv.getContext("2d");
+  const start = performance.now();
+  function frame(now){
+    const t = Math.min((now-start)/duration, 1);
+    const ease = 1 - Math.pow(1-t, 4);
+    drawWheel(ctx, segs, ease*totalRot);
+    if(t<1) requestAnimationFrame(frame);
+    else onDone(ease*totalRot);
+  }
+  requestAnimationFrame(frame);
+}
+
+function spinMain(){
+  if(spinning) return;
+  spinning = true;
+  document.getElementById("btn1").disabled = true;
+  const extra = (8 + Math.random()*8) * 2*Math.PI;
+  const total = rot1 + extra;
+  animateSpin("c1", MAIN, total, 4200, finalRot=>{
+    rot1 = finalRot;
+    spinning = false;
+    document.getElementById("btn1").disabled = false;
+    const winner = getWinner(MAIN, finalRot);
+    setTimeout(()=>{
+      document.getElementById("s1").classList.remove("active");
+      document.getElementById("r2").style.display="none";
+      document.getElementById("r3").style.display="none";
+      if(winner.label==="VERDAD"){
+        document.getElementById("s2").classList.add("active");
+      } else {
+        document.getElementById("s3").classList.add("active");
+      }
+    }, 700);
+  });
+}
+
+function spinVerdad(){
+  if(spinning) return;
+  spinning = true;
+  document.getElementById("btn2").disabled = true;
+  document.getElementById("r2").style.display="none";
+  const extra = (10 + Math.random()*8) * 2*Math.PI;
+  const total = rot2 + extra;
+  animateSpin("c2", vSegs, total, 4600, finalRot=>{
+    rot2 = finalRot;
+    spinning = false;
+    document.getElementById("btn2").disabled = false;
+    sv++;
+    document.getElementById("sv").textContent = sv;
+    document.getElementById("st").textContent = sv+sr;
+    const winner = getWinner(vSegs, finalRot);
+    const d = winner.data;
+    const box = document.getElementById("r2");
+    box.innerHTML = `
+      <div class="result-emoji">${d.emoji}</div>
+      <span class="result-badge badge-romantico">${d.cat}</span>
+      <p class="result-text">${d.texto}</p>
+    `;
+    box.style.display = "block";
+  });
+}
+
+function spinReto(){
+  if(spinning) return;
+  spinning = true;
+  document.getElementById("btn3").disabled = true;
+  document.getElementById("r3").style.display="none";
+  const extra = (10 + Math.random()*8) * 2*Math.PI;
+  const total = rot3 + extra;
+  animateSpin("c3", rSegs, total, 4600, finalRot=>{
+    rot3 = finalRot;
+    spinning = false;
+    document.getElementById("btn3").disabled = false;
+    sr++;
+    document.getElementById("sr").textContent = sr;
+    document.getElementById("st").textContent = sv+sr;
+    const winner = getWinner(rSegs, finalRot);
+    const d = winner.data;
+    const box = document.getElementById("r3");
+    box.innerHTML = `
+      <div class="result-emoji">${d.emoji}</div>
+      <span class="result-badge badge-picaro">${d.cat}</span>
+      <p class="result-text">${d.texto}</p>
+    `;
+    box.style.display = "block";
+  });
+}
+
+function goBack(){
+  document.getElementById("s2").classList.remove("active");
+  document.getElementById("s3").classList.remove("active");
+  document.getElementById("s1").classList.add("active");
+}
+
+// ── Init ──
+window.addEventListener("load", ()=>{
+  vSegs = buildSegsVerdad();
+  rSegs = buildSegsReto();
+  const ctx1 = document.getElementById("c1").getContext("2d");
+  const ctx2 = document.getElementById("c2").getContext("2d");
+  const ctx3 = document.getElementById("c3").getContext("2d");
+  drawWheel(ctx1, MAIN, 0);
+  drawWheel(ctx2, vSegs, 0);
+  drawWheel(ctx3, rSegs, 0);
+
+  // Partículas
+  const pc = document.getElementById("particles");
+  const colors = ["#f472b6","#a78bfa","#fb7185","#86efac","#c084fc"];
+  for(let i=0;i<18;i++){
+    const p = document.createElement("div");
+    p.className = "particle";
+    const size = 4 + Math.random()*6;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}vw;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${10+Math.random()*15}s;
+      animation-delay:${Math.random()*10}s;
+    `;
+    pc.appendChild(p);
+  }
+});
+</script>
+</body>
+</html>
