@@ -265,52 +265,56 @@
 <script>
 // ╔══════════════════════════════════════════════════════════════╗
 // ║  ✏️  EDITA AQUÍ — VERDADES (16 cartas)                      ║
-// ║  cat: "Romántica" | "Pícara"                                ║
+// ║  cat:    "Romántica" | "Pícara"                             ║
+// ║  nombre: texto CORTO que aparece en la ruleta               ║
+// ║  detalle: texto COMPLETO que aparece en el panel            ║
 // ╚══════════════════════════════════════════════════════════════╝
 const verdades = [
   // ── 8 ROMÁNTICAS ──
-  {emoji:"🌹", cat:"Romántica", texto:"¿Qué es lo que más te gusta de nuestra relación?"},
-  {emoji:"🥺", cat:"Romántica", texto:"¿Cuál es el momento conmigo que más llevas en el corazón?"},
-  {emoji:"💌", cat:"Romántica", texto:"¿Qué te gustaría que te dijera todos los días para sentirte más amado/a?"},
-  {emoji:"✈️", cat:"Romántica", texto:"¿Cómo te imaginas nuestro primer encuentro en persona? ¿Qué te gustaría que hiciéramos?"},
-  {emoji:"☁️", cat:"Romántica", texto:"¿Qué detalle pequeño mío te hace sonreír cuando lo recuerdas?"},
-  {emoji:"🤍", cat:"Romántica", texto:"¿Qué es lo que más extrañas de no estar juntos físicamente?"},
-  {emoji:"🌠", cat:"Romántica", texto:"¿Qué sueño o plan juntos te ilusiona más para cuando podamos vernos?"},
-  {emoji:"🫶", cat:"Romántica", texto:"¿Qué palabras o acciones mías te hacen sentir más amado/a y especial?"},
+  {emoji:"🌹", cat:"Romántica", nombre:"Suave", detalle:"¿Qué es lo que más te gusta de nuestra relación y por qué?"},
+  {emoji:"🥺", cat:"Romántica", nombre:"Tierna", detalle:"¿Cuál es el momento conmigo que más llevas en el corazón?"},
+  {emoji:"💌", cat:"Romántica", nombre:"Emocional", detalle:"¿Qué te gustaría que te dijera todos los días para sentirte más amado/a?"},
+  {emoji:"✈️", cat:"Romántica", nombre:"Profunda", detalle:"¿Cómo te imaginas nuestro primer encuentro en persona? ¿Qué te gustaría que hiciéramos?"},
+  {emoji:"☁️", cat:"Romántica", nombre:"Dulce", detalle:"¿Qué detalle pequeño mío te hace sonreír cuando lo recuerdas?"},
+  {emoji:"🤍", cat:"Romántica", nombre:"Conexión", detalle:"¿Qué es lo que más extrañas de no estar juntos físicamente?"},
+  {emoji:"🌠", cat:"Romántica", nombre:"Futuro", detalle:"¿Qué sueño o plan juntos te ilusiona más para cuando podamos vernos?"},
+  {emoji:"🫶", cat:"Romántica", nombre:"La más bonita", detalle:"¿Qué palabras o acciones mías te hacen sentir más amada y especial?"},
   // ── 8 PÍCARAS ──
-  {emoji:"🌶️", cat:"Pícara", texto:"¿Qué parte de tu cuerpo es tu favorita y por qué?"},
-  {emoji:"🔥", cat:"Pícara", texto:"¿Qué es lo que más te excita cuando piensas en mí?"},
-  {emoji:"😈", cat:"Pícara", texto:"¿Qué te gustaría que te hiciera la próxima vez que estemos juntos?"},
-  {emoji:"💭", cat:"Pícara", texto:"Describe tu fantasía más pícara conmigo sin censurarla."},
-  {emoji:"😏", cat:"Pícara", texto:"¿Prefieres que sea más suave o más intenso/a contigo?"},
-  {emoji:"📸", cat:"Pícara", texto:"¿Qué foto mía te pondría más nervioso/a recibir?"},
-  {emoji:"😳", cat:"Pícara", texto:"¿Qué idea pícara tienes en mente que nunca me has dicho?"},
-  {emoji:"💫", cat:"Pícara", texto:"¿Qué tan excitado/a te pone la idea de mandarnos mensajes pícaros? ¿Qué te da más miedo y qué más ganas?"},
+  {emoji:"🌶️", cat:"Pícara", nombre:"Suave", detalle:"¿Qué parte de tu cuerpo te gusta más y por qué? (puedes hablar de tetas o de mi verga)"},
+  {emoji:"🔥", cat:"Pícara", nombre:"Caliente", detalle:"¿Qué es lo que más te excita cuando imaginas mi cuerpo / mi verga? (o cuando imaginas que te miro las tetas)"},
+  {emoji:"😈", cat:"Pícara", nombre:"Más caliente", detalle:"¿Qué te gustaría hacerme a mi verga o qué te gustaría que yo te haga a tus tetas?"},
+  {emoji:"💭", cat:"Pícara", nombre:"Directa", detalle:"Describe cómo se ven tus tetas / mi verga cuando estás muy excitado/a"},
+  {emoji:"😏", cat:"Pícara", nombre:"Explícita", detalle:"¿Prefieres suave o fuerte? (chupar tetas / que te chupen la verga, apretar, morder un poquito, etc.)"},
+  {emoji:"📸", cat:"Pícara", nombre:"Muy caliente", detalle:"Si te mando una foto de mi verga dura ahora, ¿qué te gustaría hacer o qué sentirías? / Si te pido fotos de tus tetas, ¿qué te pone más nerviosa o caliente?"},
+  {emoji:"😳", cat:"Pícara", nombre:"Fantasía", detalle:"¿Cuál es tu fantasía más caliente conmigo con tus tetas o con mi verga?"},
+  {emoji:"💫", cat:"Pícara", nombre:"La más intensa", detalle:"¿Qué tan excitada/o te pone la idea de mandarnos fotos calientes el uno al otro? ¿Qué es lo que más miedo te da y qué es lo que más te calienta?"},
 ];
 
 // ╔══════════════════════════════════════════════════════════════╗
 // ║  ✏️  EDITA AQUÍ — RETOS (16 cartas)                         ║
-// ║  cat: "Romántico" | "Pícaro"                                ║
+// ║  cat:    "Romántico" | "Pícaro"                             ║
+// ║  nombre: texto CORTO que aparece en la ruleta               ║
+// ║  detalle: texto COMPLETO que aparece en el panel            ║
 // ╚══════════════════════════════════════════════════════════════╝
 const retos = [
   // ── 8 ROMÁNTICOS ──
-  {emoji:"😘", cat:"Romántico", texto:"Manda una foto mandando un beso a la cámara con mirada dulce."},
-  {emoji:"🫶", cat:"Romántico", texto:"Foto haciendo un corazón con las manos hacia la cámara."},
-  {emoji:"😄", cat:"Romántico", texto:"Foto de tu sonrisa más bonita y natural."},
-  {emoji:"🛏️", cat:"Romántico", texto:"Foto abrazando tu almohada como si fuera yo."},
-  {emoji:"📝", cat:"Romántico", texto:"Escribe 'Te extraño' en un papel y tómate una foto sosteniéndolo."},
-  {emoji:"🪞", cat:"Romántico", texto:"Foto mirándote al espejo con mirada tierna y amorosa."},
-  {emoji:"🌅", cat:"Romántico", texto:"Foto con luz suave mostrando tu cara relajada y feliz."},
-  {emoji:"🎁", cat:"Romántico", texto:"Foto sosteniendo algo que te recuerde a mí."},
+  {emoji:"😘", cat:"Romántico", nombre:"Besos al aire", detalle:"Ella: Foto mandando un beso a la cámara con mirada dulce. Tú: Foto mandando un beso a la cámara."},
+  {emoji:"🫶", cat:"Romántico", nombre:"Corazón con manos", detalle:"Ella: Foto haciendo un corazón con las manos hacia la cámara. Tú: Foto haciendo un corazón con las manos."},
+  {emoji:"😄", cat:"Romántico", nombre:"Sonrisa de enamorada", detalle:"Ella: Foto de su sonrisa más bonita y natural. Tú: Foto de tu sonrisa mirando a la cámara."},
+  {emoji:"🛏️", cat:"Romántico", nombre:"Abrazo a la almohada", detalle:"Foto abrazando tu almohada como si fuera yo."},
+  {emoji:"📝", cat:"Romántico", nombre:"Mensaje de amor", detalle:"Escribe 'Te extraño' en un papel y tómate una foto sosteniéndolo."},
+  {emoji:"🪞", cat:"Romántico", nombre:"Mirada enamorada", detalle:"Foto mirándote al espejo con mirada tierna y amorosa."},
+  {emoji:"🌅", cat:"Romántico", nombre:"Foto con luz suave", detalle:"Foto con luz suave o de atardecer mostrando tu cara relajada y feliz."},
+  {emoji:"🎁", cat:"Romántico", nombre:"Nuestro momento", detalle:"Foto sosteniendo algo que te recuerde a mí."},
   // ── 8 PÍCAROS ──
-  {emoji:"😉", cat:"Pícaro", texto:"Manda un audio de voz diciéndome algo que nunca te has animado a decirme."},
-  {emoji:"🎭", cat:"Pícaro", texto:"Escríbeme un mensaje pícaro como si no tuvieras ninguna vergüenza."},
-  {emoji:"🫦", cat:"Pícaro", texto:"Manda foto con tu expresión más coqueta y seductora."},
-  {emoji:"💃", cat:"Pícaro", texto:"Grábate bailando 10 segundos de forma provocadora y mándalo."},
-  {emoji:"😜", cat:"Pícaro", texto:"Dime con detalle qué harías si estuviéramos solos en este momento."},
-  {emoji:"📖", cat:"Pícaro", texto:"Escríbeme un relato de 3 líneas con nosotros dos en plan pícaro."},
-  {emoji:"🤫", cat:"Pícaro", texto:"Confiésame algo que siempre quisiste hacer conmigo pero nunca dijiste."},
-  {emoji:"🌙", cat:"Pícaro", texto:"Describe cómo sería nuestra noche perfecta juntos, con todos los detalles."},
+  {emoji:"😉", cat:"Pícaro", nombre:"Escote provocador", detalle:"Ella: Foto con la camiseta bien bajada mostrando bastante escote. Tú: Foto de tu verga dura marcada por encima del pantalón."},
+  {emoji:"🎭", cat:"Pícaro", nombre:"Tetas tapadas con manos", detalle:"Ella: Se aprieta las tetas con las dos manos cubriéndolas. Tú: Foto close-up de tu verga dura agarrada con la mano."},
+  {emoji:"🫦", cat:"Pícaro", nombre:"Tetas con camiseta mojada", detalle:"Ella: Camiseta blanca fina mojada para que se marquen bien las tetas. Tú: Foto de tu verga mojada (con saliva o después de la ducha)."},
+  {emoji:"💃", cat:"Pícaro", nombre:"Tetas al aire desde arriba", detalle:"Ella: Foto desde arriba apretándose las tetas con las dos manos. Tú: Foto de tu verga dura tomada desde arriba (solo verga y mano)."},
+  {emoji:"😜", cat:"Pícaro", nombre:"Tetas apretadas", detalle:"Ella: Se aprieta fuerte las tetas para que se junten mucho. Tú: Foto agarrando tu verga fuerte con la mano (close-up)."},
+  {emoji:"📖", cat:"Pícaro", nombre:"Tetas con mensaje", detalle:"Ella: Escribe tu nombre con el dedo en sus tetas. Tú: Escribe su nombre con el dedo en tu verga dura."},
+  {emoji:"🤫", cat:"Pícaro", nombre:"Tetas listas para ti", detalle:"Ella: Foto de sus tetas con las manos haciendo un corazón o diciendo “para ti”. Tú: Foto de tu verga muy dura con un mensaje escrito como “para tus tetas”."},
+  {emoji:"🌙", cat:"Pícaro", nombre:"Tetas desde el lado", detalle:"Ella: Foto de perfil mostrando cómo cuelgan sus tetas. Tú: Foto de perfil de tu verga dura."},
 ];
 // ╔══════════════════════════════════════════════════════════════╗
 // ║               FIN DE LA SECCIÓN EDITABLE                    ║
